@@ -11,9 +11,9 @@
  */
 namespace MOJDigital\UserRoles;
 
-include 'Utils.php';
-include 'DigitalWebmaster.php';
-include 'WebAdministrator.php';
+include 'src/Utils.php';
+include 'src/DigitalWebmaster.php';
+include 'src/WebAdministrator.php';
 
 use \WP_User;
 
