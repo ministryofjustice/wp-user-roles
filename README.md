@@ -1,11 +1,10 @@
-WP User Roles
-=============
+# WP User Roles
 
 A WordPress plugin to create user roles typically required 
 by a MOJDigital WordPress site.
 
-##Roles
-###1. Web Administrator
+## Roles
+### 1. Web Administrator
 This role is similar to the standard Editor role
 except that is has the additional following capabilities
 
@@ -23,7 +22,7 @@ This role is prevented from accessing the _Appearance_ > _Theme_ submenu.
 This role is prevented from creating new `adminstrator` roles.
 It is also prevented from modifying existing `adminstrator` roles.
 
-###2. Digital Webmaster
+### 2. Digital Webmaster
 This role is the `administrator` role. It has simply been renamed.
 
 ## Installation
