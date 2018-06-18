@@ -1,7 +1,7 @@
 # WP User Roles
 
 A WordPress plugin to create user roles typically required 
-by a MOJDigital WordPress site.
+by a MOJ Digital WordPress site.
 
 ## Roles
 ### 1. Web Administrator
