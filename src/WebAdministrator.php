@@ -41,6 +41,6 @@ class WebAdministrator {
             self::addNewAdministratorRole();
         }
 
-        add_action( 'admin_menu', 'MOJDigital\UserRoles\WebAdministrator::actionAdminMenu', 999 );
+        add_action( 'admin_menu', __NAMESPACE__ . '\WebAdministrator::actionAdminMenu', 999 );
     }
 }

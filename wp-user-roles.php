@@ -84,5 +84,5 @@ WebAdministrator::createRole();
 DigitalWebmaster::createRole();
 
 // Register hooks and filters.
-add_filter('editable_roles',  'MOJDigital\UserRoles\filterEditableRoles');
-add_filter('map_meta_cap', 'MOJDigital\UserRoles\filterMapMetaCap', 10, 4);
+add_filter('editable_roles',  __NAMESPACE__ . '\filterEditableRoles', 10, 1);
+add_filter('map_meta_cap',    __NAMESPACE__ . '\filterMapMetaCap', 10, 4);

@@ -17,7 +17,7 @@ class DigitalWebmaster {
      * In practice this just renames the default administrator role.
      */
     public static function createRole() {
-        add_action('init', 'MOJDigital\UserRoles\DigitalWebmaster::renameAdministratorRole');
+        add_action('init', __NAMESPACE__ . '\DigitalWebmaster::renameAdministratorRole');
     }
 
 }
