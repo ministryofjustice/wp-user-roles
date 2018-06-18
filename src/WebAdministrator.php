@@ -12,13 +12,13 @@ class WebAdministrator {
         // Add a new role with editor caps
         $web_administrator = Utils::getWpRolesObject()->add_role( 'web-administrator', 'Web Administrator', $editor->capabilities );
         // Additional capabilities which this role should have
-        $additionalCapabilities = array(
+        $additionalCapabilities = [
             'list_users',
             'create_users',
             'edit_users',
             'delete_users',
             'edit_theme_options',
-        );
+        ];
         foreach ( $additionalCapabilities as $cap ) {
             $web_administrator->add_cap( $cap );
         }
