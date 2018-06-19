@@ -23,14 +23,7 @@ class WebAdministrator {
             $web_administrator->add_cap( $cap );
         }
     }
-    /**
-     * Remove unwanted Appearance submenu items when logged in as a web-administrator
-     */
-    public static function actionAdminMenu() {
-        if ( current_user_can( 'web-administrator' ) ) {
-            remove_submenu_page( 'themes.php', 'themes.php' );
-        }
-    }
+
     /**
      * Create the role web-administrator if it does not exist
      * and stop this user from editing the theme.
@@ -40,7 +33,5 @@ class WebAdministrator {
         if ( ! Utils::roleExists( 'web-administrator' ) ) {
             self::addNewAdministratorRole();
         }
-
-        add_action( 'admin_menu', __NAMESPACE__ . '\WebAdministrator::actionAdminMenu', 999 );
     }
 }

@@ -14,75 +14,11 @@ namespace MOJDigital\UserRoles;
 include 'src/Utils.php';
 include 'src/DigitalWebmaster.php';
 include 'src/WebAdministrator.php';
-
-use \WP_User;
-
-/**
- * Filter editable_roles
- * Remove 'Administrator' from the list of roles if the current user is not an admin.
- *
- * @param array $roles
- * @return array
- */
- function filterEditableRoles($roles) {
-    if (isset($roles['administrator']) && !current_user_can('administrator')) {
-        unset($roles['administrator']);
-    }
-    uasort($roles, function($a, $b) {
-        return (count($a['capabilities']) - count($b['capabilities'])) * -1;
-    });
-    return $roles;
-}
-/**
- * Filter map_meta_cap
- * Map meta capabilities to capabilities
- * If someone is trying to edit or delete an admin and that user isn't an admin, don't allow it.
- *
- * @param $caps
- * @param $cap
- * @param $user_id
- * @param $args
- * @return array
- */
-function filterMapMetaCap($caps, $cap, $user_id, $args) {
-    $mapCaps = [
-        'edit_user',
-        'remove_user',
-        'promote_user',
-        'delete_user',
-        'delete_users',
-    ];
-    if (
-        in_array($cap, $mapCaps) &&
-        isset($args[0]) &&
-        disallowEditUser($user_id, $args[0])
-    ) {
-        $caps[] = 'do_not_allow';
-    }
-    return $caps;
-}
-
-/**
-* Determine if the current user is allowed to edit/delete/manage the specified user.
-* Non-administrators cannot edit administrators.
-*
-* @param int $actorId The user performing the action (i.e. the user performing the edit/deletion)
-* @param int $subjectId The user being acted upon (i.e. the user being edited/deleted)
-* @return bool
-*/
-function disallowEditUser($actorId, $subjectId) {
-    $actor = new WP_User($actorId);
-    $subject = new WP_User($subjectId);
-    return (
-        !$actor->has_cap('administrator') &&
-        $subject->has_cap('administrator')
-    );
-}
+include 'src/hooks.php';
 
 // Instantiate new roles
 WebAdministrator::createRole();
 DigitalWebmaster::createRole();
 
-// Register hooks and filters.
-add_filter('editable_roles',  __NAMESPACE__ . '\filterEditableRoles', 10, 1);
-add_filter('map_meta_cap',    __NAMESPACE__ . '\filterMapMetaCap', 10, 4);
+// Apply filters and actions
+Hooks::apply();
