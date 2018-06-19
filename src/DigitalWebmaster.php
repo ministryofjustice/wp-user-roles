@@ -7,8 +7,8 @@ class DigitalWebmaster {
      */
     public static function renameAdministratorRole() {
         $administratorName = 'Digital Webmaster';
-        if (Utils::roleName('administrator') !== $administratorName) {
-            Utils::renameRole('administrator', $administratorName);
+        if ( Utils::roleName( 'administrator' ) !== $administratorName ) {
+            Utils::renameRole( 'administrator', $administratorName );
         }
     }
     /**
@@ -17,7 +17,7 @@ class DigitalWebmaster {
      * In practice this just renames the default administrator role.
      */
     public static function createRole() {
-        add_action('init', __NAMESPACE__ . '\DigitalWebmaster::renameAdministratorRole');
+        add_action( 'init', __NAMESPACE__ . '\DigitalWebmaster::renameAdministratorRole' );
     }
 
 }

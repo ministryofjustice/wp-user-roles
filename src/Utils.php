@@ -23,9 +23,9 @@ class Utils {
     * @param $role
     * @return bool
     */
-    public static function roleExists($role) {
-        $obj = self::getWpRolesObject()->get_role($role);
-        return !is_null($obj);
+    public static function roleExists( $role ) {
+        $obj = self::getWpRolesObject()->get_role( $role );
+        return !is_null( $obj );
     }
     /**
      * Rename a user role
@@ -33,7 +33,7 @@ class Utils {
      * @param $role
      * @param $name
      */
-    public static function renameRole($role, $name) {
+    public static function renameRole( $role, $name ) {
         self::getWpRolesObject()->roles[$role]['name'] = $name;
         self::getWpRolesObject()->role_names[$role] = $name;
     }
@@ -43,9 +43,9 @@ class Utils {
      * @param $role
      * @return bool
      */
-    public static function roleName($role) {
+    public static function roleName( $role ) {
         $names = self::getWpRolesObject()->get_names();
-        if (isset($names[$role])) {
+        if ( isset( $names[$role])  ) {
             return $names[$role];
         } else {
             return false;
