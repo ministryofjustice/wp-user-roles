@@ -2,7 +2,7 @@
 
 namespace MOJDigital\UserRoles;
 
-use \WP_User;
+use WP_User;
 
 /**
  * Class Hooks
@@ -12,7 +12,8 @@ use \WP_User;
  *
  * @package MOJDigital\UserRoles
  */
-class Hooks {
+class Hooks
+{
 
     /**
      * Filter editable_roles
@@ -22,35 +23,16 @@ class Hooks {
      *
      * @return array
      */
-    public static function filterEditableRoles( $roles ) {
-        if ( isset( $roles['administrator'] ) && ! current_user_can( 'administrator' ) ) {
-            unset( $roles['administrator'] );
+    public static function filterEditableRoles($roles)
+    {
+        if (isset($roles['administrator']) && ! current_user_can('administrator')) {
+            unset($roles['administrator']);
         }
-        uasort( $roles, function ( $a, $b ) {
-            return ( count( $a['capabilities'] ) - count( $b['capabilities'] ) ) * - 1;
-        } );
+        uasort($roles, function ($a, $b) {
+            return (count($a['capabilities']) - count($b['capabilities'])) * -1;
+        });
 
         return $roles;
-    }
-
-
-    /**
-     * Determine if the current user is allowed to edit/delete/manage the specified user.
-     * Non-administrators cannot edit administrators.
-     *
-     * @param int $actorId The user performing the action (i.e. the user performing the edit/deletion)
-     * @param int $subjectId The user being acted upon (i.e. the user being edited/deleted)
-     *
-     * @return bool
-     */
-    public static function disallowNonAdminsToEditAdmins( $actorId, $subjectId ) {
-        $actor   = new WP_User( $actorId );
-        $subject = new WP_User( $subjectId );
-
-        return (
-            ! $actor->has_cap( 'administrator' ) &&
-            $subject->has_cap( 'administrator' )
-        );
     }
 
     /**
@@ -65,7 +47,8 @@ class Hooks {
      *
      * @return array
      */
-    public static function filterPreventModificationOfAdminUser( $caps, $cap, $user_id, $args ) {
+    public static function filterPreventModificationOfAdminUser($caps, $cap, $user_id, $args)
+    {
         $mapCaps = [
             'edit_user',
             'remove_user',
@@ -73,32 +56,53 @@ class Hooks {
             'delete_user',
             'delete_users',
         ];
-        if (
-            in_array( $cap, $mapCaps ) &&
-            isset( $args[0] ) &&
-            self::disallowNonAdminsToEditAdmins( $user_id, $args[0] )
+        if (in_array($cap, $mapCaps) &&
+            isset($args[0]) &&
+            self::disallowNonAdminsToEditAdmins($user_id, $args[0])
         ) {
-            $caps = [ 'do_not_allow' ];
+            $caps = ['do_not_allow'];
         }
 
         return $caps;
     }
 
     /**
+     * Determine if the current user is allowed to edit/delete/manage the specified user.
+     * Non-administrators cannot edit administrators.
+     *
+     * @param int $actorId The user performing the action (i.e. the user performing the edit/deletion)
+     * @param int $subjectId The user being acted upon (i.e. the user being edited/deleted)
+     *
+     * @return bool
+     */
+    public static function disallowNonAdminsToEditAdmins($actorId, $subjectId)
+    {
+        $actor   = new WP_User($actorId);
+        $subject = new WP_User($subjectId);
+
+        return (
+            ! $actor->has_cap('administrator') &&
+            $subject->has_cap('administrator')
+        );
+    }
+
+    /**
      * Prevent non-administrator users from accessing the `Appearance` > `Themes` sub-menu
      */
-    public static function actionRestrictAppearanceThemesMenu() {
-        if ( ! current_user_can( 'administrator' ) ) {
-            remove_submenu_page( 'themes.php', 'themes.php' );
+    public static function actionRestrictAppearanceThemesMenu()
+    {
+        if (!current_user_can('administrator')) {
+            remove_submenu_page('themes.php', 'themes.php');
         }
     }
 
     /**
      * Register actions and filters for the new roles.
      */
-    public static function apply() {
-        add_filter( 'editable_roles', __CLASS__ . '::filterEditableRoles', 10, 1 );
-        add_filter( 'map_meta_cap',   __CLASS__ . '::filterPreventModificationOfAdminUser', 10, 4 );
-        add_action( 'admin_menu',     __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999 );
+    public static function apply()
+    {
+        add_filter('editable_roles', __CLASS__ . '::filterEditableRoles', 10, 1);
+        add_filter('map_meta_cap', __CLASS__ . '::filterPreventModificationOfAdminUser', 10, 4);
+        add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
     }
 }
