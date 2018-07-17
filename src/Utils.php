@@ -29,7 +29,7 @@ class Utils
     public static function getWpRolesObject()
     {
         global $wp_roles;
-        if ( ! isset($wp_roles)) {
+        if (!isset($wp_roles)) {
             $wp_roles = new WP_Roles();
         }
 
@@ -65,4 +65,3 @@ class Utils
         }
     }
 }
-

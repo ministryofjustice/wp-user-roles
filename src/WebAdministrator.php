@@ -38,6 +38,7 @@ class WebAdministrator
             'edit_users',
             'delete_users',
             'edit_theme_options',
+            'manage_privacy_options',
         ];
         foreach ($additionalCapabilities as $cap) {
             $web_administrator->add_cap($cap);
