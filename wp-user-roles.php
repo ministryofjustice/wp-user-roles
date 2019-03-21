@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin name: MOJ Digital Custom User Roles
- * Version: 0.1.1
+ * Version: 0.1.2
  * Description: A WordPress plugin to create user roles typically required by a MOJ Digital WordPress site.
  *
  * This renames the 'Administrator' role to 'Webmaster',
