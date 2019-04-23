@@ -7,6 +7,11 @@ use WP_Roles;
 class Utils
 {
     /**
+     * @var array
+     */
+    private static $debug;
+
+    /**
      * Check if role exists
      *
      * @param $role
@@ -53,7 +58,7 @@ class Utils
      *
      * @param $role
      *
-     * @return bool
+     * @return bool|string returns a string on success, false on failure
      */
     public static function roleName($role)
     {
@@ -63,6 +68,47 @@ class Utils
         } else {
             return false;
         }
+    }
+    
+
+    /**
+     * Remove the named role from the database
+     *
+     * @param $role
+     *
+     * @return bool
+     */
+    public static function removeRole($role)
+    {
+        if (self::roleExists($role)) {
+            self::getWpRolesObject()->remove_role($role);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function debug($stage, $result)
+    {
+        if (!MOJ_USER_ROLES_DEBUG) {
+            return;
+        }
+
+        if (!self::$debug) {
+            self::$debug = get_option('moj_user_roles_data_debug', []);
+        }
+
+        self::$debug[] = [
+            'stage' => $stage,
+            'result' => json_encode($result)
+        ];
+
+        update_option('moj_user_roles_data_debug', self::$debug);
+    }
+
+    public static function clear_debug()
+    {
+        update_option('moj_user_roles_data_debug', []);
     }
 }
 

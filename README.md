@@ -1,7 +1,7 @@
 # WP User Roles
 
 A WordPress plugin to create user roles typically required 
-by a MOJ Digital WordPress site.
+by a MOJ Digital WordPress site. 
 
 ## Roles
 ### 1. Web Administrator
@@ -11,6 +11,7 @@ except that is has the additional following capabilities
 * `list_users`
 * `create_users`
 * `edit_users`
+* `promote_users`
 * `delete_users`
 * `edit_theme_options`
 
@@ -26,6 +27,10 @@ It is also prevented from modifying existing `adminstrator` roles.
 This role is the `administrator` role. It has simply been renamed.
 
 ## Installation
+This plugin is suitable for loading from the mu-plugins directory.
+
+However, it can be installed in the normal way.
+
 Use the standard method of installing plugins for your site.
 For example go to _Plugins_ > _Add new_ > _Upload Plugin_.
 
@@ -34,4 +39,4 @@ in the directory where your `composer.json` file is located.
 This will install the latest version of this plugin.
 
 Once the plugin folder is in place activate it by going to `wp-admin/plugins.php`
-and clicking on the _Activate_ link under _MOJ Digital Custom User Roles_.
+and clicking on the _Activate_ link under _MOJ Digital WP User Roles_.

@@ -14,7 +14,6 @@ use WP_User;
  */
 class Hooks
 {
-
     /**
      * Filter editable_roles
      * Remove 'Administrator' from the list of roles if the current user is not an admin.
@@ -25,7 +24,7 @@ class Hooks
      */
     public static function filterEditableRoles($roles)
     {
-        if (isset($roles['administrator']) && ! current_user_can('administrator')) {
+        if (isset($roles['administrator']) && !current_user_can('administrator')) {
             unset($roles['administrator']);
         }
         uasort($roles, function ($a, $b) {
@@ -77,11 +76,11 @@ class Hooks
      */
     public static function disallowNonAdminsToEditAdmins($actorId, $subjectId)
     {
-        $actor   = new WP_User($actorId);
+        $actor = new WP_User($actorId);
         $subject = new WP_User($subjectId);
 
         return (
-            ! $actor->has_cap('administrator') &&
+            !$actor->has_cap('administrator') &&
             $subject->has_cap('administrator')
         );
     }
@@ -96,6 +95,65 @@ class Hooks
         }
     }
 
+    public static function updateRoleMaybe()
+    {
+        $options = get_option('moj_user_roles_data', []);
+
+        // create a preliminary record
+        $data = [
+            'datetime' => time(),
+            'version' => MOJ_USER_ROLES_VERSION
+        ];
+
+        if (!empty($options)) {
+            $last_entry = end($options);
+
+            Utils::debug('last_entry_' . __LINE__, $last_entry);
+
+            // make sure we have an entry to work with...
+            if (!isset($last_entry['version'])) {
+                return false;
+            }
+
+            Utils::debug('last_entry_exists_' . __LINE__, true);
+
+            // only update if we have a difference
+            if ($last_entry['version'] !== MOJ_USER_ROLES_VERSION) {
+                Utils::debug('difference_found_' . __LINE__,
+                    ['last_version' => $last_entry['version'], 'now_version' => MOJ_USER_ROLES_VERSION]);
+                if (Utils::removeRole('web-administrator') === true) {
+                    array_push($options, $data);
+
+                    if (update_option('moj_user_roles_data', $options)) {
+                        Utils::debug('History Updated ' . __LINE__, 'true');
+                    }
+
+                    // recreate the role
+                    WebAdministrator::createRole();
+                } else {
+                    Utils::debug('role_not_removed_' . __LINE__,
+                        ['last_version' => $last_entry['version'], 'now_version' => MOJ_USER_ROLES_VERSION]);
+                }
+            }
+
+        } else {
+            // should occur once, or if the option 'moj_user_roles_data' is empty
+            array_push($options, $data);
+            update_option('moj_user_roles_data', $options);
+            return true;
+        }
+
+        return null;
+    }
+
+    public static function loadAssets()
+    {
+        wp_register_style('moj_user_roles', plugins_url('src/assets/main.css', dirname(__FILE__)), false,
+            MOJ_USER_ROLES_VERSION);
+        wp_enqueue_style('moj_user_roles');
+
+    }
+
     /**
      * Register actions and filters for the new roles.
      */
@@ -104,5 +162,7 @@ class Hooks
         add_filter('editable_roles', __CLASS__ . '::filterEditableRoles', 10, 1);
         add_filter('map_meta_cap', __CLASS__ . '::filterPreventModificationOfAdminUser', 10, 4);
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
+        add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
+        add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
     }
 }
