@@ -164,5 +164,31 @@ class Hooks
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
+
+        // stop Editors from
+        add_action('publish_to_draft', __CLASS__ . '::cannotModifyHomePageState', 10);
+        add_action('publish_to_future', __CLASS__ . '::cannotModifyHomePageState', 10);
+        add_action('publish_to_private', __CLASS__ . '::cannotModifyHomePageState', 10);
+        add_action('publish_to_pending', __CLASS__ . '::cannotModifyHomePageState', 10);
+        add_action('publish_to_trash', __CLASS__ . '::cannotModifyHomePageState', 10);
+    }
+
+    public function cannotModifyHomePageState($post)
+    {
+        if (!current_user_can('administrator') && is_front_page()) {
+            wp_update_post([
+                'ID' => $post->ID,
+                'post_status' => 'publish'
+            ]);
+
+            add_action('admin_notices', __CLASS__. '::moj_cannot_modify_homepage_status');
+        }
+    }
+
+    public function moj_cannot_modify_homepage_status()
+    {
+        echo '<div class="notice notice-info is-dismissible">
+                <p>You have attempted to remove the home-page from public view. Your action has undesirable results and has been stopped to protect the website.</p>
+            </div>';
     }
 }
