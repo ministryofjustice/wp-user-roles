@@ -13,7 +13,7 @@
 namespace MoJDigital\UserRoles;
 
 // KEEP SYNC'D WITH THE VERSION ABOVE
-define('MOJ_USER_ROLES_VERSION', '0.2.2');
+define('MOJ_USER_ROLES_VERSION', '0.2.3');
 // Turn debug mode on or off
 define('MOJ_USER_ROLES_DEBUG', false);
 
