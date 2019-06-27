@@ -119,8 +119,13 @@ class Hooks
 
             // only update if we have a difference
             if ($last_entry['version'] !== MOJ_USER_ROLES_VERSION) {
-                Utils::debug('difference_found_' . __LINE__,
-                    ['last_version' => $last_entry['version'], 'now_version' => MOJ_USER_ROLES_VERSION]);
+                Utils::debug(
+                    'difference_found_' . __LINE__,
+                    [
+                        'last_version' => $last_entry['version'],
+                        'now_version' => MOJ_USER_ROLES_VERSION
+                    ]
+                );
                 if (Utils::removeRole('web-administrator') === true) {
                     array_push($options, $data);
 
@@ -131,8 +136,13 @@ class Hooks
                     // recreate the role
                     WebAdministrator::createRole();
                 } else {
-                    Utils::debug('role_not_removed_' . __LINE__,
-                        ['last_version' => $last_entry['version'], 'now_version' => MOJ_USER_ROLES_VERSION]);
+                    Utils::debug(
+                        'role_not_removed_' . __LINE__,
+                        [
+                            'last_version' => $last_entry['version'],
+                            'now_version' => MOJ_USER_ROLES_VERSION
+                        ]
+                    );
                 }
             }
 
@@ -146,12 +156,64 @@ class Hooks
         return null;
     }
 
+    /**
+     * Show a notification to the user if an unqualified attempt has been made to remove the homepage
+     * from public view.
+     */
+    public static function mojCannotModifyHomepageStatus()
+    {
+        if (Utils::isWebAdministratorOnHomepage() && get_option('MOJ_POST_STATUS_UPDATE_STOPPED', null)) {
+            echo '<div class="notice notice-error is-dismissible">
+                <p><strong>There was an attempt to remove the homepage from public view. This action has undesirable results and has been stopped to protect the website.</strong></p>
+            </div>';
+
+            delete_option('MOJ_POST_STATUS_UPDATE_STOPPED');
+        }
+    }
+
+    /**
+     * If a Web Administrator has been detected and they have accidentally opted to remove the homepage
+     * from public view, switch the status of the homepage back to publish for them.
+     *
+     * This operation is only tied to users with a role of Web Administrator or below. Digital Webmasters
+     * have full control.
+     *
+     * @param $new_status
+     * @param $old_status
+     * @param $post
+     */
+    public function onHomepageStatusChange($new_status, $old_status, $post)
+    {
+        $is_forbidden = [
+            'draft',
+            'future',
+            'private',
+            'pending',
+            'trash'
+        ];
+
+        if (in_array($new_status, $is_forbidden)) {
+            if (Utils::isWebAdministratorOnHomepage()) {
+                wp_update_post([
+                    'ID' => $post->ID,
+                    'post_status' => 'publish'
+                ]);
+
+                add_option('MOJ_POST_STATUS_UPDATE_STOPPED', true);
+            }
+        }
+    }
+
     public static function loadAssets()
     {
-        wp_register_style('moj_user_roles', plugins_url('src/assets/main.css', dirname(__FILE__)), false,
-            MOJ_USER_ROLES_VERSION);
-        wp_enqueue_style('moj_user_roles');
+        wp_register_style(
+            'moj_user_roles',
+            plugins_url('src/assets/main.css', dirname(__FILE__)),
+            false,
+            MOJ_USER_ROLES_VERSION
+        );
 
+        wp_enqueue_style('moj_user_roles');
     }
 
     /**
@@ -165,30 +227,8 @@ class Hooks
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
 
-        // stop Editors from
-        add_action('publish_to_draft', __CLASS__ . '::cannotModifyHomePageState', 10);
-        add_action('publish_to_future', __CLASS__ . '::cannotModifyHomePageState', 10);
-        add_action('publish_to_private', __CLASS__ . '::cannotModifyHomePageState', 10);
-        add_action('publish_to_pending', __CLASS__ . '::cannotModifyHomePageState', 10);
-        add_action('publish_to_trash', __CLASS__ . '::cannotModifyHomePageState', 10);
-    }
-
-    public function cannotModifyHomePageState($post)
-    {
-        if (!current_user_can('administrator') && is_front_page()) {
-            wp_update_post([
-                'ID' => $post->ID,
-                'post_status' => 'publish'
-            ]);
-
-            add_action('admin_notices', __CLASS__. '::moj_cannot_modify_homepage_status');
-        }
-    }
-
-    public function moj_cannot_modify_homepage_status()
-    {
-        echo '<div class="notice notice-info is-dismissible">
-                <p>You have attempted to remove the home-page from public view. Your action has undesirable results and has been stopped to protect the website.</p>
-            </div>';
+        // stop Editors
+        add_action('transition_post_status', __CLASS__ . '::onHomepageStatusChange', 10, 3);
+        add_action('admin_notices', __CLASS__ . '::mojCannotModifyHomepageStatus');
     }
 }

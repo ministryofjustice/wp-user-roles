@@ -110,5 +110,15 @@ class Utils
     {
         update_option('moj_user_roles_data_debug', []);
     }
+
+    /**
+     * Determine if a Web Administrator is editing the homepage.
+     * @return bool
+     */
+    public static function isWebAdministratorOnHomepage()
+    {
+        global $post_ID;
+        return !current_user_can('administrator') && ($post_ID === (int)get_option('page_on_front'));
+    }
 }
 
