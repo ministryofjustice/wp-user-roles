@@ -182,7 +182,7 @@ class Hooks
      * @param $old_status
      * @param $post
      */
-    public function onHomepageStatusChange($new_status, $old_status, $post)
+    public static function onHomepageStatusChange($new_status, $old_status, $post)
     {
         $is_forbidden = [
             'draft',
