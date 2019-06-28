@@ -182,7 +182,7 @@ class Hooks
      * @param $old_status
      * @param $post
      */
-    public static function onHomepageStatusChange($new_status, $old_status, $post)
+    public function onHomepageStatusChange($new_status, $old_status, $post)
     {
         $is_forbidden = [
             'draft',
@@ -206,14 +206,19 @@ class Hooks
 
     public static function loadAssets()
     {
-        wp_register_style(
+        wp_enqueue_style(
             'moj_user_roles',
             plugins_url('src/assets/main.css', dirname(__FILE__)),
-            false,
+            array(),
             MOJ_USER_ROLES_VERSION
         );
 
-        wp_enqueue_style('moj_user_roles');
+        wp_enqueue_script(
+            'moj_user_roles_block_js',
+            plugins_url('src/assets/block.js', dirname(__FILE__)),
+            array(),
+            MOJ_USER_ROLES_VERSION
+        );
     }
 
     /**
@@ -226,6 +231,7 @@ class Hooks
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
+        add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssets', 10);
 
         // stop Editors
         add_action('transition_post_status', __CLASS__ . '::onHomepageStatusChange', 10, 3);
