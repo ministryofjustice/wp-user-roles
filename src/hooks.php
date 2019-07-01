@@ -208,14 +208,14 @@ class Hooks
     {
         wp_enqueue_style(
             'moj_user_roles',
-            plugins_url('dist/css/main.css', dirname(__FILE__)),
+            plugins_url('dist/css/main.min.css', dirname(__FILE__)),
             array(),
             MOJ_USER_ROLES_VERSION
         );
 
         wp_enqueue_script(
             'moj_user_roles_block_js',
-            plugins_url('dist/js/block.js', dirname(__FILE__)),
+            plugins_url('dist/js/main.min.js', dirname(__FILE__)),
             array('jquery'),
             MOJ_USER_ROLES_VERSION
         );
