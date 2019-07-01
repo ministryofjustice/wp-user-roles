@@ -13,3 +13,7 @@
     text-align: left;
 }
 
+.wp-admin.is-front-page .editor-post-switch-to-draft {
+  display:none;
+  font-size: 0;
+}

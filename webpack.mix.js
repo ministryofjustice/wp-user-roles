@@ -1,6 +1,6 @@
 const mix_ = require('laravel-mix');
 
-var _asset = './assets/';
+var _asset = './src/assets/';
 
 mix_.setPublicPath('./dist')
     .js(_asset + 'js/block.js', 'js/main.min.js')

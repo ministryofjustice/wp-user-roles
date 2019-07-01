@@ -182,7 +182,7 @@ class Hooks
      * @param $old_status
      * @param $post
      */
-    public function onHomepageStatusChange($new_status, $old_status, $post)
+    public static function onHomepageStatusChange($new_status, $old_status, $post)
     {
         $is_forbidden = [
             'draft',
@@ -204,15 +204,46 @@ class Hooks
         }
     }
 
+    public static function onHomepageStatusChangeQuickEdit($data, $post_array)
+    {
+        $is_forbidden = [
+            'draft',
+            'future',
+            'private',
+            'pending',
+            'trash'
+        ];
+
+        if (in_array($data['post_status'], $is_forbidden)) {
+            if (!current_user_can('administrator') && ($post_array['ID'] === (int)get_option('page_on_front'))) {
+                add_option('MOJ_POST_STATUS_UPDATE_STOPPED', true);
+                $data['post_status'] = 'publish';
+            }
+        }
+
+        return $data;
+    }
+
     public static function loadAssets()
     {
-        $manifest = json_decode(file_get_contents(MOJ_USER_ROLES_DIR . '/dist/mix-manifest.json'));
+        $manifest = json_decode(
+            file_get_contents(MOJ_USER_ROLES_DIR . '/dist/mix-manifest.json'),
+            true
+        );
 
         wp_enqueue_style(
             'moj_user_roles',
             plugins_url('dist/' . $manifest['/css/main.min.css'], dirname(__FILE__)),
             array(),
             MOJ_USER_ROLES_VERSION
+        );
+    }
+
+    public static function loadAssetsBlocks()
+    {
+        $manifest = json_decode(
+            file_get_contents(MOJ_USER_ROLES_DIR . '/dist/mix-manifest.json'),
+            true
         );
 
         wp_enqueue_script(
@@ -221,6 +252,30 @@ class Hooks
             array('jquery'),
             MOJ_USER_ROLES_VERSION
         );
+    }
+
+    public static function frontPageBodyCLass($classes)
+    {
+        global $post;
+
+        if (gettype($post) !== 'object') {
+            return false;
+        }
+
+        if ($post->ID === (int)get_option('page_on_front')) {
+            $classes .= ' is-front-page';
+        }
+        return $classes;
+    }
+
+    public static function removeQuickEditLink($actions, $post)
+    {
+        $can_edit_post = current_user_can('administrator');
+        if (!$can_edit_post && ($post->ID === (int)get_option('page_on_front'))) {
+            unset($actions['inline hide-if-no-js']);
+        }
+
+        return $actions;
     }
 
     /**
@@ -233,10 +288,15 @@ class Hooks
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
-        add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssets', 10);
+        add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssetsBlocks', 10);
 
         // stop Editors
         add_action('transition_post_status', __CLASS__ . '::onHomepageStatusChange', 10, 3);
+        add_filter('wp_insert_post_data', __CLASS__ . '::onHomepageStatusChangeQuickEdit', 10, 2);
         add_action('admin_notices', __CLASS__ . '::mojCannotModifyHomepageStatus');
+        add_filter('page_row_actions', __CLASS__ . '::removeQuickEditLink', 10, 2);
+
+        // mark the front-page in admin
+        add_filter('admin_body_class', __CLASS__ . '::frontPageBodyCLass', 99);
     }
 }

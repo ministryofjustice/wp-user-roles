@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/ministryofjustice/wp-user-roles#readme",
   "dependencies": {
+    "@wordpress/data": "^4.6.0",
     "@wordpress/hooks": "^2.4.0",
+    "@wordpress/notices": "^1.5.0",
     "laravel-mix": "^4.0.16",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.32.2"
