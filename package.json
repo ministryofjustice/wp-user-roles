@@ -1,0 +1,27 @@
+{
+  "name": "wp-user-roles",
+  "version": "0.2.3",
+  "description": "A WordPress plugin to create user roles typically required by a MOJ Digital WordPress site.",
+  "scripts": {
+    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ministryofjustice/wp-user-roles.git"
+  },
+  "author": "Damien Wilson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ministryofjustice/wp-user-roles/issues"
+  },
+  "homepage": "https://github.com/ministryofjustice/wp-user-roles#readme",
+  "dependencies": {
+    "@wordpress/hooks": "^2.4.0",
+    "laravel-mix": "^4.0.16",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.32.2"
+  }
+}
