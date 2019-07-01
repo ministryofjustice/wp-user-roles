@@ -16,6 +16,8 @@ namespace MoJDigital\UserRoles;
 define('MOJ_USER_ROLES_VERSION', '0.2.3');
 // Turn debug mode on or off
 define('MOJ_USER_ROLES_DEBUG', false);
+// get the directory
+define('MOJ_USER_ROLES_DIR', __DIR__);
 
 include 'src/Utils.php';
 include 'src/DigitalWebmaster.php';
