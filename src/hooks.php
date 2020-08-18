@@ -288,7 +288,11 @@ class Hooks
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
-        add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssetsBlocks', 10);
+
+        // Todo
+        // Fix experimental code;
+        // Test compatibility with Wordpress SEO (Yoast) - code/dependencies causes a fatal error
+        // add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssetsBlocks', 10);
 
         // stop Editors
         add_action('transition_post_status', __CLASS__ . '::onHomepageStatusChange', 10, 3);
