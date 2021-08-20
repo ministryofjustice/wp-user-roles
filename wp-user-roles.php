@@ -4,8 +4,7 @@
  * Version: 1.0.0
  * Description: A WordPress plugin to create user roles typically required by a MOJ Digital WordPress site.
  *
- * This renames the 'Administrator' role to 'Digital Webmaster',
- * and creates a new role 'Web Administrator' which extends Editor role adding support for:
+ * This creates a new role 'Site Manager' which extends Editor role adding support for:
  *   – managing navigation menus
  *   – managing users
  */
