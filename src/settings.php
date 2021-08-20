@@ -4,6 +4,8 @@
  * these functions could be run multiple times; this would result in a fatal error.
  */
 
+use MOJDigital\UserRoles\Utils;
+
 /**
  * custom option and settings
  */
@@ -26,21 +28,7 @@ function moj_user_roles_settings_init()
         'moj_user_roles_section_version_history_cb',
         'moj_user_roles'
     );
-    /*
-        // register a new field in the "moj_user_roles" section, inside the "moj_user_roles" page
-        add_settings_field(
-            'moj_user_roles_field_pill', // as of WP 4.6 this value is used only internally
-            // use $args' label_for to populate the id inside the callback
-            __('', 'moj_user_roles'),
-            'moj_field_switch_cb',
-            'moj_user_roles',
-            'moj_user_roles_section_developers',
-            [
-                'label_for' => 'moj_field_switch_cb',
-                'class' => 'moj_user_roles_row',
-                'moj_user_roles_custom_data' => 'custom',
-            ]
-        );*/
+
 }
 
 /**
@@ -126,17 +114,6 @@ function moj_user_roles_section_version_history_cb($args)
     }
 }
 
-// field callbacks can accept an $args parameter, which is an array.
-// $args is defined at the add_settings_field() function.
-// wordpress has magic interaction with the following keys: label_for, class.
-// the "label_for" key value is used for the "for" attribute of the <label>.
-// the "class" key value is used for the "class" attribute of the <tr> containing the field.
-// you can add custom key value pairs to be used inside your callbacks.
-function moj_field_switch_cb($args)
-{
-
-}
-
 /**
  * top level menu
  */
@@ -168,6 +145,12 @@ function moj_user_roles_options_page_html()
         return;
     }
 
+
+    if (isset($_GET['admin-script'])) {
+        if($_GET['admin-script'] == 'remove-web-admin'){
+            Utils::removeRole('web-administrator');
+        }
+    }
     // add error/update messages
 
     // check if the user have submitted the settings

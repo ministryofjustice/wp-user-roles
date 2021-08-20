@@ -9,10 +9,7 @@ class DigitalWebmaster
      */
     public static function renameAdministratorRole()
     {
-        $administratorName = 'Digital Webmaster';
-        if (Utils::roleName('administrator') !== $administratorName) {
-            Utils::renameRole('administrator', $administratorName);
-        }
+
     }
 
     /**
