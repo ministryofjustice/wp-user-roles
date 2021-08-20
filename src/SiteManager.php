@@ -5,7 +5,7 @@ namespace MOJDigital\UserRoles;
 class SiteManager
 {
     /**
-     * Create the role web-administrator if it does not exist
+     * Create the role site-manager if it does not exist
      * and stop this user from editing the theme.
      */
     public static function createRole()
@@ -25,7 +25,7 @@ class SiteManager
         $editor = Utils::getWpRolesObject()->get_role('editor');
 
         // Add a new role with editor caps
-        $web_administrator = Utils::getWpRolesObject()->add_role(
+        $site_manager = Utils::getWpRolesObject()->add_role(
             'site-manager',
             'Site Manager',
             $editor->capabilities
@@ -42,7 +42,7 @@ class SiteManager
             'edit_theme_options',
         ];
         foreach ($additionalCapabilities as $cap) {
-            $web_administrator->add_cap($cap);
+            $site_manager->add_cap($cap);
         }
     }
 }
