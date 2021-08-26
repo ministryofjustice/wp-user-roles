@@ -126,7 +126,7 @@ class Hooks
                         'now_version' => MOJ_USER_ROLES_VERSION
                     ]
                 );
-                if (Utils::removeRole('web-administrator') === true) {
+                if (Utils::removeRole('site-manager') === true) {
                     array_push($options, $data);
 
                     if (update_option('moj_user_roles_data', $options)) {
@@ -134,7 +134,7 @@ class Hooks
                     }
 
                     // recreate the role
-                    WebAdministrator::createRole();
+                    SiteManager::createRole();
                 } else {
                     Utils::debug(
                         'role_not_removed_' . __LINE__,

@@ -4,7 +4,7 @@ A WordPress plugin to create user roles typically required
 by a MOJ Digital WordPress site. 
 
 ## Roles
-### 1. Web Administrator
+### 1. Site Manager
 This role is similar to the standard Editor role
 except that is has the additional following capabilities
 
@@ -13,6 +13,7 @@ except that is has the additional following capabilities
 * `edit_users`
 * `promote_users`
 * `delete_users`
+* `remove_users`
 * `edit_theme_options`
 
 This role is typically assigned to user accounts of stakeholders 
@@ -22,9 +23,6 @@ This role is prevented from accessing the _Appearance_ > _Theme_ submenu.
 
 This role is prevented from creating new `adminstrator` roles.
 It is also prevented from modifying existing `adminstrator` roles.
-
-### 2. Digital Webmaster
-This role is the `administrator` role. It has simply been renamed.
 
 ## Installation
 This plugin is suitable for loading from the mu-plugins directory.

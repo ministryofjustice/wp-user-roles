@@ -2,32 +2,32 @@
 
 namespace MOJDigital\UserRoles;
 
-class WebAdministrator
+class SiteManager
 {
     /**
-     * Create the role web-administrator if it does not exist
+     * Create the role site-manager if it does not exist
      * and stop this user from editing the theme.
      */
     public static function createRole()
     {
-        // Add web-administrator role if required
-        if (!Utils::roleExists('web-administrator')) {
-            self::addNewAdministratorRole();
+        // Add site-manager role if required
+        if (!Utils::roleExists('site-manager')) {
+            self::addNewRole();
         }
     }
 
     /**
-     * Add new role Web Administrator.
+     * Add new role Site Manager.
      * Inherit capabilities from Editor role.
      */
-    private static function addNewAdministratorRole()
+    private static function addNewRole()
     {
         $editor = Utils::getWpRolesObject()->get_role('editor');
 
         // Add a new role with editor caps
-        $web_administrator = Utils::getWpRolesObject()->add_role(
-            'web-administrator',
-            'Web Administrator',
+        $site_manager = Utils::getWpRolesObject()->add_role(
+            'site-manager',
+            'Site Manager',
             $editor->capabilities
         );
 
@@ -38,10 +38,11 @@ class WebAdministrator
             'edit_users',
             'promote_users',
             'delete_users',
+            'remove_users',
             'edit_theme_options',
         ];
         foreach ($additionalCapabilities as $cap) {
-            $web_administrator->add_cap($cap);
+            $site_manager->add_cap($cap);
         }
     }
 }
