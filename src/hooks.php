@@ -238,22 +238,7 @@ class Hooks
             MOJ_USER_ROLES_VERSION
         );
     }
-
-    public static function loadAssetsBlocks()
-    {
-        $manifest = json_decode(
-            file_get_contents(MOJ_USER_ROLES_DIR . '/dist/mix-manifest.json'),
-            true
-        );
-
-        wp_enqueue_script(
-            'moj_user_roles_block_js',
-            plugins_url('dist/' . $manifest['/js/main.min.js'], dirname(__FILE__)),
-            array('jquery'),
-            MOJ_USER_ROLES_VERSION
-        );
-    }
-
+    
     public static function frontPageBodyCLass($classes)
     {
         global $post;
@@ -288,11 +273,6 @@ class Hooks
         add_action('admin_menu', __CLASS__ . '::actionRestrictAppearanceThemesMenu', 999);
         add_action('admin_init', __CLASS__ . '::updateRoleMaybe', 10);
         add_action('admin_enqueue_scripts', __CLASS__ . '::loadAssets', 10);
-
-        // Todo
-        // Fix experimental code;
-        // Test compatibility with Wordpress SEO (Yoast) - code/dependencies causes a fatal error
-        // add_action('enqueue_block_editor_assets', __CLASS__ . '::loadAssetsBlocks', 10);
 
         // stop Editors
         add_action('transition_post_status', __CLASS__ . '::onHomepageStatusChange', 10, 3);
