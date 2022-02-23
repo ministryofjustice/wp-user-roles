@@ -3,10 +3,10 @@
   "version": "0.2.3",
   "description": "A WordPress plugin to create user roles typically required by a MOJ Digital WordPress site.",
   "scripts": {
-    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "dev": "NODE_ENV=development webpack --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development webpack --watch --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
     "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "production": "NODE_ENV=production webpack --progress --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,7 @@
     "@wordpress/data": "^4.6.0",
     "@wordpress/hooks": "^2.4.0",
     "@wordpress/notices": "^1.5.0",
-    "laravel-mix": "^4.0.16",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.32.2"
+    "laravel-mix": "^6.0.43",
+    "vue-template-compiler": "^2.6.10"
   }
 }
