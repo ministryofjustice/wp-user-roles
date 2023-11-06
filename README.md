@@ -6,7 +6,7 @@ by a MOJ Digital WordPress site.
 ## Roles
 ### 1. Site Manager
 This role is similar to the standard Editor role
-except that is has the additional following capabilities
+except that is has the additional following capabilities.
 
 * `list_users`
 * `create_users`
